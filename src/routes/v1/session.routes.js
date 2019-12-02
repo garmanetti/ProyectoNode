@@ -5,16 +5,15 @@ const { User } = require("../../models");
 const { JWT_SECRET } = require("../../constants");
 
 module.exports = router => {
-  router.post("*", json());
-
-  router.post("/sessions", (req, res) => {
+  //LOGIN
+  router.post("/", json(), (req, res) => {
     User.findOne({ email: req.body.email })
       .then(doc => {
         return Promise.all([
-          compare(req.body.password, doc.hash),
+          compare(req.body.password, doc.password),
           doc.toObject({
             transform(doc, ret, options) {
-              delete ret.hash;
+              delete ret.password;
               return ret;
             }
           })
